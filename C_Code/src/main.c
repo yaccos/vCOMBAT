@@ -275,6 +275,7 @@ int main(const int argc, char** argv) {
     else 
     {
         if (mParam.replicationThreshold == DEFAULT_DUMMY)
+		// Beware: This integer division rounds down, but in this case it appears to be OK
         mParam.replicationThreshold = mParam.targetMoleculeCount / 2;
 	    if (mParam.killingThreshold == DEFAULT_DUMMY)
 		mParam.killingThreshold = mParam.targetMoleculeCount / 2;
