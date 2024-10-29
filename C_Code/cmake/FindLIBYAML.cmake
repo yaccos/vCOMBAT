@@ -21,6 +21,7 @@ if ($LIBYAML_DIR)
                 NAMES yaml libyaml
                 HINTS "${LIBYAML_DIR}/lib/")
 else()
+    message("Searching Yaml in other directories")
     FIND_PATH(LIBYAML_INCLUDE_DIRS NAMES yaml.h)
     FIND_LIBRARY(LIBYAML_LIBRARIES NAMES yaml libyaml)
 endif()

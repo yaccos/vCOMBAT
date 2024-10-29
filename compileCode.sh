@@ -7,9 +7,9 @@ rm -rf bin/*
 rm C_Code/CMakeCache.txt
 cd C_Code
 echo -e "cmaking.."
-cmake .
+cmake  . -DCMAKE_BUILD_TYPE=Release
 echo -e "making.."
-make
+ninja
 cd ..
 echo -e "copying binary.."
 cp -a C_Code/bin/* bin/

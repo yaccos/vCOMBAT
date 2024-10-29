@@ -16,6 +16,8 @@ configure_file (
 
 #list of sources
 set(sources src/main.c src/base_simulation.c src/full_model.c ${CMAKE_CURRENT_LIST_DIR}/arg_parser/carg_parser.c)
+SET( CMAKE_CXX_FLAGS_RELEASE  "-O3")
+SET( CMAKE_CXX_FLAGS  "-O3")
 
 #Use release-level optimization
 set(CMAKE_BUILD_TYPE Release)
