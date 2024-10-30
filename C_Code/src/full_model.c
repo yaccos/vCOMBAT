@@ -107,9 +107,9 @@ int calculateModelDerivative_BindingOnly (double curTime,
 	incPointer = param->hyperGeometricMatrix;
 	tmpSum = 0.0;
 	for (i=0; i < param->replicationThreshold; ++i)
-		tmpSum += *incPointer++ * (1.0- (double) j/ (double) param->replicationThreshold) * compartmentBoundComplexState[i];
+		tmpSum += *incPointer++ * (1.0- (double) i / (double) param->replicationThreshold) * compartmentBoundComplexState[i];
 	tmpSum = 2.0 * param->baselineReplication * tmpSum * scratchReplicationSum
-	       - param->baselineReplication * (1.0 - (double) i/ (double) param->replicationThreshold) * scratchReplicationSum * compartmentBoundComplexState[0];
+	       - param->baselineReplication * scratchReplicationSum * compartmentBoundComplexState[0];
 	
 	// If the killing threshold is set to zero (unlikely but possible) then death must be factored into
 	// bacteria with no bound target molecules
@@ -140,7 +140,7 @@ int calculateModelDerivative_BindingOnly (double curTime,
 			for (j=i; j < param->replicationThreshold; ++j)
 				tmpSum += *incPointer++ * (1.0- (double) j / (double) param->replicationThreshold) * compartmentBoundComplexState[j];
 			tmpSum = 2.0 * param->baselineReplication * tmpSum * scratchReplicationSum
-			       - param->baselineReplication * (1.0 - (double) i/ (double) param->targetMoleculeCount) * scratchReplicationSum * compartmentBoundComplexState[i];
+			       - param->baselineReplication * (1.0 - (double) i / (double) param->replicationThreshold) * scratchReplicationSum * compartmentBoundComplexState[i];
 		}
 		if (i >= param->killingThreshold)
 			tmpSum -= param->maximumKillRate * compartmentBoundComplexState[i];

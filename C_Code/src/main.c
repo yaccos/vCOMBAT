@@ -203,14 +203,15 @@ int main(const int argc, char** argv) {
 				steppingFunction = gsl_odeiv2_step_rkf45;
 			else if (!strcmp(tmpStr, "rkck"))
 				steppingFunction = gsl_odeiv2_step_rkck;
-            else if (!strcmp(tmpStr, "msbdf"))//Vi added
-				steppingFunction = gsl_odeiv2_step_msbdf;
             else if (!strcmp(tmpStr, "rk2"))
 				steppingFunction = gsl_odeiv2_step_rk2;
-            else if (!strcmp(tmpStr, "bsimp"))
-				steppingFunction = gsl_odeiv2_step_bsimp;
             else if (!strcmp(tmpStr, "msadams"))
 				steppingFunction = gsl_odeiv2_step_msadams;
+			else {
+				fprintf(stderr,"Invalid solver option: %s\n",tmpStr);
+				return EXIT_FAILURE;
+			}
+
 			break;
 		default:
 			argParserInternalError("uncaught option.");
@@ -472,7 +473,7 @@ static void displayHelp(const char* programName) {
 	       "   -p, --startingPopulation [population]    : Initial bacterial population.\n"
 	       "                                         default: %lg\n"
 	       "   -S, --steppingFunction [function] : Stepping function to use for the numerical integration.\n"
-	       "                                         where [function] is one of {rk4, rkf45, rkck, rk2}\n"
+	       "                                         where [function] is one of {rk4, rkf45, rkck, rk2, msadams}\n"
 	       "                                         default: rk2\n"
 	       "   -t, --time [etime (s)]:[intvl (s)]   : Specifies total simulation time [etime] and interval between time-points [intvl].\n"
 	       "                                         default: %lg:%lg\n\n",
