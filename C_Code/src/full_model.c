@@ -138,7 +138,7 @@ int calculateModelDerivative_BindingOnly (double curTime,
 		tmpSum = 0.0;
 		if (i < param->replicationThreshold) {
 			for (j=i; j < param->replicationThreshold; ++j)
-				tmpSum += *incPointer++ * (1.0- j / (double) param->replicationThreshold) * compartmentBoundComplexState[j];
+				tmpSum += *incPointer++ * (1.0- (double) j / (double) param->replicationThreshold) * compartmentBoundComplexState[j];
 			tmpSum = 2.0 * param->baselineReplication * tmpSum * scratchReplicationSum
 			       - param->baselineReplication * (1.0 - (double) i / (double) param->replicationThreshold) * scratchReplicationSum * compartmentBoundComplexState[i];
 		}
