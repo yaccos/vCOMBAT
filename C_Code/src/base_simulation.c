@@ -128,6 +128,8 @@ int runSimulation(const gsl_odeiv2_step_type* stepping, const ModelParameters* m
 	if (verbose)
 		printf("\n\n");
 
+	results->n = driver->n;
+	
 	return GSL_SUCCESS;
 }
 

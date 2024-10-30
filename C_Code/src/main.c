@@ -354,6 +354,7 @@ int main(const int argc, char** argv) {
 	// Run the simulation itself, and measure its execution time
 	t = clock();
 	mParam.hyperGeometricMatrix = generateHypergeometricMatrix(mParam.targetMoleculeCount, mParam.replicationThreshold);
+
 	if (runSimulation(steppingFunction, &mParam,  sParam.endTime, sParam.stepSize, stateVector, &results, outputFileM, oHandleM) != GSL_SUCCESS) {
 		fprintf(stderr, "The simulation failed.\n");
 		return EXIT_FAILURE;
@@ -373,6 +374,7 @@ int main(const int argc, char** argv) {
 		printf("---------------\n\n");
 		printf("Final population %g\n\n",populationSum);
 		printf("It took me (%f milliseconds).\n\n",((float)t*1000.0)/CLOCKS_PER_SEC);
+		printf("A total of %d ODE integration steps were taken\n\n",results.n);
 	}
 	
 	if (outputFile != NULL) {

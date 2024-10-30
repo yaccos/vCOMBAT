@@ -31,6 +31,7 @@ typedef struct _SimulationResults {
     double* unboundantibiotic; ///< Vector containing the list of free antibiotic concentartion for each time-point.
 	double finalTime;        ///< The final time-point of the system.
 	double finalPopulation;  ///< The final population count of the system.
+	unsigned long int n;      ///< Number of steps taken by ODE solver
 } SimulationResults;
 
 int runSimulation(const gsl_odeiv2_step_type* stepping, const ModelParameters* mParam, const double endTime,
