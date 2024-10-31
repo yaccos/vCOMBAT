@@ -65,6 +65,7 @@ int main(const int argc, char** argv) {
 	// Set-up model parameters with default arguments
 	struct _ModelParameters mParam = {
 		.transMembranePermeability = DEFAULT_TRANSMEMBRANE_PERMEABILITY,
+		.totalVolume = DEFAULT_TOTAL_VOLUME,
 		.intracellularVolume = DEFAULT_INTRACELLULAR_VOLUME,
 		.targetMoleculeCount = DEFAULT_TARGET_MOLECULE_COUNT,
 		.replicationThreshold = DEFAULT_DUMMY, // This will get defaulted based on targetMoleculeCount
@@ -100,7 +101,7 @@ int main(const int argc, char** argv) {
 	const struct ap_Option options[] = {
 		{ 'v', "verbose",                 ap_no  },
 		{ 'h', "help",                    ap_no  },
-		{ 'V', "intracellularVolume",     ap_yes },
+		{ 'V', "totalVolume",             ap_yes },
 		{ 'n', "targetMoleculeCount",     ap_yes },
 		{ 'r', "replicationThreshold",    ap_yes },
 		{ 'k', "killingThreshold",        ap_yes },
@@ -148,7 +149,7 @@ int main(const int argc, char** argv) {
 			displayHelp(programName);
 			return EXIT_SUCCESS;
 		case 'V':
-			sscanf(ap_argument(&parser, argIdx), "%lg", &mParam.intracellularVolume);
+			sscanf(ap_argument(&parser, argIdx), "%lg", &mParam.totalVolume);
 			break;
 		case 'n':
 			sscanf(ap_argument(&parser, argIdx), "%d", &mParam.targetMoleculeCount);
@@ -252,14 +253,18 @@ int main(const int argc, char** argv) {
 			// Old code: Changing nG/mL to number of molecules: A*1e3*1e-6*6.02e23/MW    //mParam.realantibioticconc[x]=mParam.realantibioticconc[x]*6.02e17*mParam.intracellularVolume/mParam.molecularweight;
 				
 			// Newcode by Vi 
-			mParam.realantibioticconc[x]=mParam.realantibioticconc[x]*6.02e20*mParam.intracellularVolume / mParam.molecularweight;
+			mParam.realantibioticconc[x]=mParam.realantibioticconc[x]*6.02e20*mParam.totalVolume / mParam.molecularweight;
 
 		}
 		fclose(myFile);
 		myFile=NULL;
+		// To avoid potential issues from using an uninitialized value
+		mParam.staticAntibioticConcentration = 0.0;
 	} else {
-		printf("Running without input file with initial antibioctic concentration %lg\n",sParam.startingAntibiotic);
-		mParam.staticAntibioticConcentration = sParam.startingAntibiotic*6.02e20*mParam.intracellularVolume / mParam.molecularweight;
+		// Not really needed because it is the default, but it adds some clarity
+		mParam.extendedModel = 0;
+		printf("Running without input file with initial antibiotic concentration %lg\n",sParam.startingAntibiotic);
+		mParam.staticAntibioticConcentration = sParam.startingAntibiotic*6.02e20*mParam.totalVolume / mParam.molecularweight;
 	}
     
     //-------------------------------------------------------------------------
@@ -305,7 +310,7 @@ int main(const int argc, char** argv) {
 		printf("Target dissociation rate\t%lg\n", mParam.targetDissociationRate);
 		printf("Drug Molecular Weight    \t%lg\n", mParam.molecularweight);
 		printf("Carrying capacity       \t%lg\n", mParam.carryingCapacity);
-		printf("Intracellular volume    \t%lg\n", mParam.intracellularVolume);
+		printf("Total volume    \t%lg\n", mParam.intracellularVolume);
 	}
 	
 	// Make sure that no weird parameters have been supplied
@@ -349,7 +354,7 @@ int main(const int argc, char** argv) {
    printf("%s\n",headout);
   
 	// Initialize the initial state to all bacteria without bound targets and the initial dose in the extracellular medium
-	stateVector = initializeStateVector(mParam.targetMoleculeCount, sParam.startingAntibiotic, sParam.startingPopulation);
+	stateVector = initializeStateVector(mParam.targetMoleculeCount, mParam.staticAntibioticConcentration, sParam.startingPopulation);
 	
 	// Run the simulation itself, and measure its execution time
 	t = clock();
@@ -499,7 +504,7 @@ static void displayHelp(const char* programName) {
 	       "                                            default: %lg\n"
 	       "   -D, --targetDissociationRate [rate (1/s)]  : Rate constant for dissociation of target/antibiotic complex.\n"
 	       "                                            default: %lg\n"
-	       "   -V, --intracellularVolume [size (L)]     : Internal volume of a bacterium.\n"
+	       "   -V, --totalVolume [size (L)]              :Total volume of system.\n"
 	       "                                            default: %lg\n"
 	       "   -C, --carryingCapacity [population]         : Carrying capacity (maximum population) of the system.\n"
 	       "                                            default: %lg\n\n",

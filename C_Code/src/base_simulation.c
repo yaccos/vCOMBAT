@@ -102,6 +102,7 @@ int runSimulation(const gsl_odeiv2_step_type* stepping, const ModelParameters* m
 	results->timePoint = malloc(sizeof(double) * totalTimePoints);
 	results->totalPopulation = malloc(sizeof(double) * totalTimePoints);
     results->unboundantibiotic = malloc(sizeof(double) * totalTimePoints);
+	results->n = 0;
 	
 	if (verbose)
 		printf("\ncreating system with %d free variables\n", NUMBER_FREE_KINETIC_VARIABLES + mParam->targetMoleculeCount + 1);
@@ -121,6 +122,8 @@ int runSimulation(const gsl_odeiv2_step_type* stepping, const ModelParameters* m
 			fprintf (stderr, "error in  gsl_odeiv2_driver_apply: %d (%s)\n", status, gsl_strerror (status));
 			return status;
 		}
+
+		results->n += driver->n;
 		updateSimulationResultsPerTick(mParam, stateVector, curTime, curTimePoint, results, output, oHandleM);
 		
 		nextTime += timeInterval;
@@ -128,7 +131,6 @@ int runSimulation(const gsl_odeiv2_step_type* stepping, const ModelParameters* m
 	if (verbose)
 		printf("\n\n");
 
-	results->n = driver->n;
 	
 	return GSL_SUCCESS;
 }
