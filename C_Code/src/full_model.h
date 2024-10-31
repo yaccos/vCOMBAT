@@ -12,7 +12,8 @@
 */
 #define DEFAULT_TRANSMEMBRANE_PERMEABILITY 0.0   ///< NOT IMPLEMENTED YET
 //#define DEFAULT_INTRACELLULAR_VOLUME 3.0e-16        ///< For M.Tuberculosis
-#define DEFAULT_INTRACELLULAR_VOLUME 1.0e-15        /// Vi changed to 1.0e-15
+#define DEFAULT_INTRACELLULAR_VOLUME 1.0e-15        /// Vi changed to 1.0e-15, NOT IMPLEMENTED YET
+#define DEFAULT_TOTAL_VOLUME 1.0                   /// As long as the we have no transmembrane permeability implemented, we consider the entire volume
 #define DEFAULT_TARGET_MOLECULE_COUNT 100         ///< From equationparserv2.R
 #define DEFAULT_BASELINE_REPLICATION 8.34e-6         ///< From equationparserv2.R
 #define DEFAULT_MAXIMUM_KILL_RATE 1.39e-5           ///< From equationparserv2.R
@@ -38,6 +39,7 @@ typedef struct  _ModelParameters {
 	** Cellular details.
 	*/
 	double transMembranePermeability;   ///< Permeability rate for the bacterial membrane.
+	double totalVolume;                 ///< The total volume surrounding the bacteria
 	double intracellularVolume;         ///< Volume of each cell.
 	
 	/* Parameters related to target molecule effects on growth/death

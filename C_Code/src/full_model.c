@@ -85,11 +85,11 @@ int calculateModelDerivative_BindingOnly (double curTime,
     
     
 	// Calculation of $\frac{k_f}{n_AV_i}$
-	scratchVolumeModifiedK = param->targetAssociationRate / (AVOGADRO_CONSTANT * param->intracellularVolume);
+	scratchVolumeModifiedK = param->targetAssociationRate / (AVOGADRO_CONSTANT * param->totalVolume);
 	
 	// Calculation of $(\frac{k_f}{n_AV_i}A \times B_x for 0 < x < n$
 	for (i = 0, j = 1; i < param->targetMoleculeCount; ++i, ++j) {
-		scratchForwardRateComponent[i] = scratchVolumeModifiedK * yfreeAntibiotic * compartmentBoundComplexState[i];
+		scratchForwardRateComponent[i] = scratchVolumeModifiedK * yfreeAntibiotic *  compartmentBoundComplexState[i];
 		scratchBackwardRateComponent[i] =  param->targetDissociationRate * j * compartmentBoundComplexState[j];
 		scratchReplicationSum += compartmentBoundComplexState[j];
 		scratchSumForward += (param->targetMoleculeCount - i) * scratchForwardRateComponent[i];
@@ -220,8 +220,8 @@ int sanityCheckModelParameters(ModelParameters* param) {
 		fprintf(stderr, "Initial antibiotic concentration was out of range. Must be d > 0. \n");
 		--goodFlag;
 	}
-	if (param->intracellularVolume < 0.0) {
-		fprintf(stderr, "Intra-cellular volume was out of range. Must be V > 0.\n");
+	if (param->totalVolume < 0.0) {
+		fprintf(stderr, "Total volume was out of range. Must be V > 0.\n");
 		--goodFlag;
 	}
 	return goodFlag;
